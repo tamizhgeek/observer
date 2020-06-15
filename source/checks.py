@@ -1,10 +1,9 @@
 import json
 import re
-import time
 from typing import Optional
 
 from common.logging import logger
-from source.client import HttpClientLike, ClientResponse
+from source.client import HttpClientLike
 
 
 class CheckResult:
@@ -20,19 +19,19 @@ class CheckResult:
 
 
 class Check:
-    def __init__(self, url: str, checks: Optional[dict] = None):
+    def __init__(self, url: str, regex_checks: Optional[dict] = None):
         self.url = url
-        self.checks = checks
-        if self.checks is not None:
-            self.checks = dict(map(lambda check: (check[0], self.check_regex(check[1])), checks.items()))
+        self.regex_checks = regex_checks
+        if self.regex_checks is not None:
+            self.regex_checks = dict(map(lambda check: (check['name'], self.check_regex(check['pattern'])), regex_checks))
 
     async def execute(self, client: HttpClientLike) -> CheckResult:
         results = dict()
         logger.info(f"GET url: {self.url}")
         response = await client.get(self.url, retries=3)
-        if self.checks is not None:
+        if self.regex_checks is not None:
             logger.info(f"executing extra regex checks for url: {self.url}")
-            for name, check_func in self.checks.items():
+            for name, check_func in self.regex_checks.items():
                 logger.info(f"executing regex check : {name} for url: {self.url}")
                 results[name] = check_func(response.body)
         return CheckResult(self.url, response.code, response.time, results, response.error)

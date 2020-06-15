@@ -2,6 +2,7 @@ import asyncio
 
 from aiohttp import ClientSession
 
+from common.checks_config import checks
 from common.kafka.producer import KafkaP
 from source.checks import Check
 from source.client import AsyncHttpClient
@@ -13,9 +14,8 @@ async def main():
         client = AsyncHttpClient(session)
         kafka_producer = KafkaP()
         tasks = []
-        for url, wait_in_s in {"https://aiven.io": 2, "https://google.com": 3, "https://eyeem.com": 5, "https://fb.com": 50}.items():
-            check = Check(url, None)
-            tasks.append(schedule(client, kafka_producer, check, wait_in_s))
+        for check, frequency_in_s in checks:
+            tasks.append(schedule(client, kafka_producer, check, frequency_in_s))
         await asyncio.gather(*tasks)
 
 

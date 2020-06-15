@@ -25,7 +25,7 @@ async def test_check_should_get_a_page_and_return_check_result(http_client):
 
 @pytest.mark.asyncio
 async def test_check_should_get_a_page_and_return_check_result_with_regex_checks(http_client):
-    check = Check("https://postman-echo.com/get", {'check_postman_echo': '.*host.*:.*postman\-echo.com'})
+    check = Check("https://postman-echo.com/get", {'name': 'check_postman_echo', 'pattern': '.*host.*:.*postman\-echo.com'})
     result = await check.execute(http_client)
     assert result.code == 200
     assert result.url == "https://postman-echo.com/get"

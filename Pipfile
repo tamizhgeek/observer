@@ -9,6 +9,10 @@ verify_ssl = true
 kafka-python = "*"
 pygresql = "*"
 aiohttp = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pyyaml = "*"
+pyflakes = "*"
 
 [requires]
 python_version = "3.8"
