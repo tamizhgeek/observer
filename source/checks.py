@@ -1,3 +1,4 @@
+import json
 import re
 import time
 from typing import Optional
@@ -14,16 +15,18 @@ class CheckResult:
         self.regex_checks = regex_checks
         self.errors = errors
 
-    def __str__(self):
-        checks_str = ",".join(list(map(lambda check, result: f"${check} returned {result}", self.regex_checks)))
-        return f"Url:{self.url},code:{self.code},time_taken:{self.time},regex_checks:{checks_str},errors:{self.errors}"
+    def to_json(self):
+        return json.dumps(dict(filter(lambda item: item[1] is not None, self.__dict__.items())))
+
 
 class Check:
     def __init__(self, url: str, checks: Optional[dict] = None):
         self.url = url
         self.checks = checks
+        if self.checks is not None:
+            self.checks = dict(map(lambda check: (check[0], self.check_regex(check[1])), checks.items()))
 
-    async def execute(self, client: HttpClientLike):
+    async def execute(self, client: HttpClientLike) -> CheckResult:
         results = dict()
         logger.info(f"GET url: {self.url}")
         response = await client.get(self.url, retries=3)
