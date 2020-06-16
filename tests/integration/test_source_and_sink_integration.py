@@ -33,7 +33,6 @@ async def db(env: str = "TEST"):
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip
 async def test_source_and_sink_integration(db, db_config, kafka_config, checks_config):
     await db.execute(f"CREATE SCHEMA {db_config['schema']}")
     source_coro = source_main(kafka_config, checks_config)
