@@ -19,10 +19,19 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel twine pipenv
+    - name: setup secrets
+      run: |
+        echo $ssl_cert > config/service.cert
+        echo $ssl_key > config/service.key
+        echo $ssl_ca > config/ca.pem
+      env:
+        ssl_cert: ${{ secrets.SSL_CERT }} 
+        ssl_key: ${{ secrets.SSL_KEY }}
+        ssl_ca: ${{ secrets.SSL_CA }}
     - name: Run tests
       run: |
         pipenv install --dev
-        pipenv run pytest
+        pipenv run pytest --disable-warnings
     - name: Build and publish
       run: |
         python setup.py sdist bdist_wheel
