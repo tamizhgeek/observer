@@ -19,7 +19,7 @@ def load_kafka_config(env: Optional[str] = None):
     app_config = load_app_config(env)
     if 'kafka' not in app_config:
         raise RuntimeError("kafka config is missing")
-    for key in ['host', 'topic_name', 'api_version', 'ssl_ca_path', 'ssl_cert_path', 'ssl_key_path']:
+    for key in ['host', 'topic_name', 'api_version', 'ssl_ca_file', 'ssl_cert_file', 'ssl_key_file']:
         if not app_config.has_option('kafka', key):
             raise RuntimeError(f"Kafka config key {key} is missing")
     return {
@@ -37,8 +37,8 @@ def load_db_config(env: Optional[str] = None):
     if 'db' not in app_config:
         raise RuntimeError("db config is missing")
     for key in ['conn_string', 'schema', 'table']:
-        if not app_config.has_option('kafka', key):
-            raise RuntimeError(f"Kafka config key {key} is missing")
+        if not app_config.has_option('db', key):
+            raise RuntimeError(f"DB config key {key} is missing")
     return {
         'conn_string': app_config.get('db', 'conn_string'),
         'schema': app_config.get('db', 'schema'),
