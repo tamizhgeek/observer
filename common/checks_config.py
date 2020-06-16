@@ -6,6 +6,7 @@ from source.checks import Check
 
 this_dir = os.path.dirname(__file__)
 
+config_dir = os.getenv("OBSERVER_CONFIG_DIR", os.path.join(this_dir, "../config"))
 
 def dict_to_check_tuple(check_config: dict):
     if check_config.get('url') is None or check_config.get('frequency') is None:
@@ -14,7 +15,7 @@ def dict_to_check_tuple(check_config: dict):
 
 
 def load_checks() -> set:
-    with open(os.path.join(this_dir, "../config/checks.yml"), "r") as f:
+    with open(os.path.join(config_dir, "checks.yml"), "r") as f:
         checks = yaml.safe_load(f.read())
     if checks is None:
         raise RuntimeError("there is a problem with loading check configuration")
