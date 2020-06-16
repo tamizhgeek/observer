@@ -24,6 +24,9 @@ jobs:
         echo $ssl_cert > config/service.cert
         echo $ssl_key > config/service.key
         echo $ssl_ca > config/ca.pem
+        cat config/ca.pem
+        cat config/service.cert
+        cat config/service.key
       env:
         ssl_cert: ${{ secrets.SSL_CERT }} 
         ssl_key: ${{ secrets.SSL_KEY }}
