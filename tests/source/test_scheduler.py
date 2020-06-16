@@ -69,4 +69,4 @@ async def test_scheduled_check_execution_times_with_multiple_checks(http_client:
         await asyncio.wait_for(asyncio.gather(*all_checks), timeout=(repeat_secs * num_repeat) + repeat_secs)
     except asyncio.TimeoutError:
         print('timeout!')
-        assert len(kafka_producer.sent_messages[kafka_config['topic_name']]) == num_repeat * num_checks
+        assert len(kafka_producer.sent_messages[kafka_config['topic_name']]) >= num_repeat * num_checks
