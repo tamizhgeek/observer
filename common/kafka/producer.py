@@ -1,26 +1,29 @@
-from kafka import KafkaProducer
+from aiokafka import AIOKafkaProducer
+from kafka.errors import KafkaTimeoutError
 
-from common.config import kafka_config
+from common.kafka.ssl import create_ssl_context
 from common.logging import logger
 
 
-class KafkaP:
-    def __init__(self, config=None):
-        if config is None:
-            config = kafka_config
-        self.producer = KafkaProducer(
-            ssl_certfile=config["ssl_cert_path"],
-            ssl_keyfile=config["ssl_key_path"],
-            ssl_cafile=config['ssl_ca_path'],
-            security_protocol="SSL",
-            bootstrap_servers=config['host']
-        )
+async def producer(kafka_config: dict):
+    producer = AIOKafkaProducer(
+        ssl_context=create_ssl_context(kafka_config),
+        security_protocol="SSL",
+        bootstrap_servers=kafka_config['host'],
+        enable_idempotence=True
+    )
+    await producer.start()
+    return producer
 
-    def send(self, topic: str, data: bytes, error_callback=None):
-        if error_callback is None:
-            error_callback = self.error_callback
-        self.producer.send(topic, data).add_errback(error_callback)
 
-    @staticmethod
-    def error_callback(ex):
-        logger.error('Kafka producer send failed', exc_info=ex)
+async def send(p: AIOKafkaProducer, topic: str, data: bytes, retried=False):
+    try:
+        future = await p.send(topic, data)
+        await future
+    except KafkaTimeoutError as e:
+        logger.error("kafka producer send failed", exc_info=e)
+        # In case of timeout, we retry once
+        if not retried:
+            await send(p, topic, data, retried=True)
+        else:
+            raise e

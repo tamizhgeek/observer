@@ -3,3 +3,12 @@
 .idea
 *.iml
 config.DEV.ini
+
+build
+dist
+*egg*
+
+*cert
+*pem
+*key
+*DS_Store

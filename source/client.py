@@ -1,12 +1,15 @@
 import time
 from typing import Optional
 
-from aiohttp import ClientSession, ClientResponseError, ClientConnectionError
+from aiohttp import ClientSession, ClientConnectionError
 
 from common.logging import logger
 
 
 class HttpClientLike:
+    def __init__(self):
+        pass
+
     def get(self, url, retries):
         raise NotImplementedError()
 
@@ -24,7 +27,7 @@ class AsyncHttpClient(HttpClientLike):
             if response.status < 400:
                 return ClientResponse(response.status, total_time, text, None)
             else:
-              return ClientResponse(response.status, total_time, None, response.reason)
+                return ClientResponse(response.status, total_time, None, response.reason)
         except ClientConnectionError as e:
             if retries > 0:
                 logger.error(f"Request failed while GET on url: {url}. Retrying")

@@ -4,15 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pyflakes = "*"
+pytest = "*"
+pytest-asyncio = "*"
 
 [packages]
 kafka-python = "*"
-pygresql = "*"
 aiohttp = "*"
-pytest = "*"
-pytest-asyncio = "*"
 pyyaml = "*"
-pyflakes = "*"
+asyncpg = "*"
+aiokafka = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"

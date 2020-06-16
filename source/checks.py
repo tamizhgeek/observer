@@ -1,29 +1,18 @@
-import json
 import re
 from typing import Optional
 
 from common.logging import logger
+from common.models import CheckResult
 from source.client import HttpClientLike
 
 
-class CheckResult:
-    def __init__(self, url: str, code: int, time: float, regex_checks: dict, errors: Optional[str] = None):
-        self.code = code
-        self.url = url
-        self.time = time
-        self.regex_checks = regex_checks
-        self.errors = errors
-
-    def to_json(self):
-        return json.dumps(dict(filter(lambda item: item[1] is not None, self.__dict__.items())))
-
-
 class Check:
-    def __init__(self, url: str, regex_checks: Optional[dict] = None):
+    def __init__(self, url: str, regex_checks: Optional[list] = None):
         self.url = url
         self.regex_checks = regex_checks
         if self.regex_checks is not None:
-            self.regex_checks = dict(map(lambda check: (check['name'], self.check_regex(check['pattern'])), regex_checks))
+            self.regex_checks = dict(
+                map(lambda check: (check['name'], self.check_regex(check['pattern'])), regex_checks))
 
     async def execute(self, client: HttpClientLike) -> CheckResult:
         results = dict()
@@ -41,6 +30,8 @@ class Check:
         re_pattern = re.compile(pattern)
 
         def _match(text: str) -> bool:
+            if text is None:
+                return False
             match = re_pattern.match(text)
             return match is not None
 
