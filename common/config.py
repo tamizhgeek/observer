@@ -39,8 +39,12 @@ def load_db_config(env: Optional[str] = None):
     for key in ['conn_string', 'schema', 'table']:
         if not app_config.has_option('db', key):
             raise RuntimeError(f"DB config key {key} is missing")
+    password = app_config.get('db', 'password')
+    if password is None or password == "":
+        password = os.getenv('OBSERVER_DB_PASSWORD', "")
+    conn_str = str(app_config.get('db', 'conn_string')).replace("password_place_holder", password)
     return {
-        'conn_string': app_config.get('db', 'conn_string'),
+        'conn_string': conn_str,
         'schema': app_config.get('db', 'schema'),
         'table': app_config.get('db', 'table')
     }
