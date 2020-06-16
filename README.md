@@ -130,9 +130,9 @@ pipenv run pytest
 
 Running unitests still needs internet access to access websites mentioned in the check configs
 and a PostgreSQL database. The configuration for the same is provided via the
-[config/config.TEST.ini](). The configurations are pretty self explanatory. 
+[config.TEST.ini](config/config.TEST.ini). The configurations are pretty self explanatory. 
 
-There is an end to end integration test in [tests/integration/test_source_and_sink_integration.py]() which is skipped by default,
+There is an end to end integration test in [test_source_and_sink_integration.py](tests/integration/test_source_and_sink_integration.py) which is skipped by default,
 since it requires SSL configuration to talk to Kafka cluster. To run it, you need to supply the
 CA certificate and Access key and certificate and configure the filenames in the 
 config file. Again, the `config.TEST.ini` has good reference values.
