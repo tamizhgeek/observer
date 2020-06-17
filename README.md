@@ -2,12 +2,13 @@
 
 ![Build Status](https://github.com/tamizhgeek/observer/workflows/Test%20and%20Build/badge.svg)
 
-Observer is a tool to monitor websites. You can configure uptime, status and regex based checks for websites and store them into a PostgreSQL database via Kafka.
+Observer is a tool to monitor websites. You can configure uptime, status and regex based checks for websites and store the check results into a PostgreSQL database via Kafka.
+
 
 ### Requirements
 
 - Python 3.7+
-- PostgreSQL 11 (It probably works with < 11 versions as well)
+- PostgreSQL 11 (It probably works with < 11 versions as well, but wasn't tested)
 - Kafka 2.4
 
 ### Setup
@@ -85,7 +86,8 @@ It is recommended to run this tool and the sink tool using a processor manager s
 Sink is a tool to complement the Source. It will read the monitoring
 results from Kafka and store them into a PostgreSQL database. To run the Sink, you need
 to follow the almost same procedure as mentioned above. You don't need to create the checks.yml while configuring Sink.
-If both Source and Sink are running on the same node, they can share the `config.ini` configuration. 
+If both Source and Sink are running on the same node, they can share the `config.ini` configuration. There is an option to
+supply the DB password via a ENV var (`OBSERVER_DB_PASSWORD`) if required.
 
 Before starting Sink, you need to initialize the database.  
 
