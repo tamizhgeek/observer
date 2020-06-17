@@ -14,7 +14,7 @@ async def init_pool(conn_string: str = None) -> Pool:
     return await asyncpg.create_pool(dsn=conn_string, init=set_custom_encoding)
 
 
-async def set_custom_encoding(conn: Connection):
+async def set_custom_encoding(conn: Connection) -> None:
     await conn.set_type_codec(
         'json',
         encoder=json.dumps,
@@ -48,7 +48,7 @@ def table_ddl(table_name: str, schema: str) -> dict:
 # executemany is a problem if we have duplicate check results in the batch - it will then fail the whole batch
 # Our kafka consumer works on `At least once` semantics, so duplicates are possible. Hence we insert batches inside
 # large transaction blocks.
-async def insert_many(conn: Connection, schema: str, table: str, columns: list, values: Iterable[list]):
+async def insert_many(conn: Connection, schema: str, table: str, columns: list, values: Iterable[list]) -> None:
     num_columns = len(columns)
     place_holders = ",".join(list(map(lambda x: f'${x}', range(1, num_columns + 1))))
     columns_str = ",".join(columns)
@@ -58,7 +58,7 @@ async def insert_many(conn: Connection, schema: str, table: str, columns: list, 
     await conn.executemany(insert_query, values)
 
 
-async def create_table_if_not_exists(conn: Connection, schema: str, table: str):
+async def create_table_if_not_exists(conn: Connection, schema: str, table: str) -> None:
     table_exists_bool = await table_exists(conn, schema, table)
     if not table_exists_bool:
         for table_name, ddl in table_ddl(table, schema).items():

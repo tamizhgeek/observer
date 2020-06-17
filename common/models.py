@@ -15,5 +15,5 @@ class CheckResult:
         self.errors = errors
         self.created_at = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
 
-    def to_json(self):
+    def to_json(self) -> str:
         return json.dumps(dict(filter(lambda item: item[1] is not None, self.__dict__.items())))

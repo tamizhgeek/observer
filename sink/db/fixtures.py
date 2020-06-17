@@ -8,7 +8,7 @@ from common.logging import logger
 from sink.db.dbops import connect, table_ddl
 
 
-async def create_tables(connection: Connection, table_name: str, schema: str, live=False):
+async def create_tables(connection: Connection, table_name: str, schema: str, live=False) -> None:
     for table_name, ddl in table_ddl(table_name, schema).items():
         logger.info(f"creating table {table_name}")
         if live:
@@ -17,7 +17,7 @@ async def create_tables(connection: Connection, table_name: str, schema: str, li
             logger.info(ddl)
 
 
-async def create_schema(connection: Connection, schema: str, live=False):
+async def create_schema(connection: Connection, schema: str, live=False) -> None:
     schema_create = f"CREATE SCHEMA IF NOT EXISTS {schema}"
     logger.info(f"creating schema {schema}")
     if live:
@@ -26,7 +26,7 @@ async def create_schema(connection: Connection, schema: str, live=False):
         logger.info(schema_create)
 
 
-async def drop_schema(connection: Connection, schema: str, live=False, destroy=False):
+async def drop_schema(connection: Connection, schema: str, live=False, destroy=False) -> None:
     schema_drop = f"DROP SCHEMA IF EXISTS {schema} cascade"
     logger.warning(f"dropping schema {schema}")
     if live and destroy:
@@ -35,7 +35,7 @@ async def drop_schema(connection: Connection, schema: str, live=False, destroy=F
         logger.info(schema_drop)
 
 
-async def main(db_config: dict, live=False, destroy=False):
+async def main(db_config: dict, live=False, destroy=False) -> None:
     if destroy:
         logger.warning(
             "!!!!Running with destroy mode and this will destory the existing schema!!!! The script will wait for 5 secs to help you reevaluate the decision.")

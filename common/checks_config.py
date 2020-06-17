@@ -1,4 +1,5 @@
 import os
+from typing import Tuple
 
 import yaml
 
@@ -8,7 +9,8 @@ this_dir = os.path.dirname(__file__)
 
 config_dir = os.getenv("OBSERVER_CONFIG_DIR", os.path.join(this_dir, "../config"))
 
-def dict_to_check_tuple(check_config: dict):
+
+def dict_to_check_tuple(check_config: dict) -> Tuple[Check, int]:
     if check_config.get('url') is None or check_config.get('frequency') is None:
         raise RuntimeError("Each check config should have url and frequency attributes")
     return Check(url=check_config['url'], regex_checks=check_config.get('regex')), check_config['frequency']

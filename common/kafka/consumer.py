@@ -5,7 +5,7 @@ from aiokafka import AIOKafkaConsumer
 from common.kafka.ssl import create_ssl_context
 
 
-async def consumer(kafka_config: dict):
+async def consumer(kafka_config: dict) -> AIOKafkaConsumer:
     consumer = AIOKafkaConsumer(
         kafka_config['topic_name'],
         group_id="observer-consumer",

@@ -1,6 +1,6 @@
 import asyncio
 import datetime
-from typing import List
+from typing import List, Coroutine
 
 from aiokafka import ConsumerRecord
 from asyncpg import Connection
@@ -15,7 +15,7 @@ def kafka_meta_id(message: ConsumerRecord) -> str:
     return f"{message.partition}-{message.offset}"
 
 
-async def insert_into_db(conn: Connection, schema_name: str, table_name: str, check_results: List[dict]):
+async def insert_into_db(conn: Connection, schema_name: str, table_name: str, check_results: List[dict]) -> None:
     if len(check_results) > 0:
         columns = check_results[0].keys()
         for check_result in check_results:
@@ -51,6 +51,7 @@ def run():
     kafka_config = load_kafka_config()
     db_config = load_db_config()
     asyncio.run(main(db_config, kafka_config))
+
 
 if __name__ == "__main__":
     run()

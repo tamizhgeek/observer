@@ -5,6 +5,12 @@ from aiohttp import ClientSession, ClientConnectionError
 
 from common.logging import logger
 
+class ClientResponse:
+    def __init__(self, code: int, time: float, body: Optional[str], error: Optional[str]):
+        self.code = code
+        self.body = body
+        self.time = time
+        self.error = error
 
 class HttpClientLike:
     def __init__(self):
@@ -18,7 +24,7 @@ class AsyncHttpClient(HttpClientLike):
     def __init__(self, session: ClientSession):
         self.session = session
 
-    async def get(self, url, retries):
+    async def get(self, url, retries) -> ClientResponse:
         try:
             start = time.perf_counter()
             response = await self.session.get(url)
@@ -34,11 +40,3 @@ class AsyncHttpClient(HttpClientLike):
                 await self.get(self.session, retries - 1)
             else:
                 raise e
-
-
-class ClientResponse:
-    def __init__(self, code: int, time: float, body: Optional[str], error: Optional[str]):
-        self.code = code
-        self.body = body
-        self.time = time
-        self.error = error

@@ -6,7 +6,7 @@ this_dir = os.path.dirname(__file__)
 config_dir = os.getenv("OBSERVER_CONFIG_DIR", os.path.join(this_dir, "../config"))
 
 
-def load_app_config(env: Optional[str] = None):
+def load_app_config(env: Optional[str] = None) -> ConfigParser:
     app_config: ConfigParser = ConfigParser()
     filenames = [os.path.join(config_dir, 'config.ini')]
     if env is not None:
@@ -15,7 +15,7 @@ def load_app_config(env: Optional[str] = None):
     return app_config
 
 
-def load_kafka_config(env: Optional[str] = None):
+def load_kafka_config(env: Optional[str] = None) -> dict:
     app_config = load_app_config(env)
     if 'kafka' not in app_config:
         raise RuntimeError("kafka config is missing")
@@ -32,7 +32,7 @@ def load_kafka_config(env: Optional[str] = None):
     }
 
 
-def load_db_config(env: Optional[str] = None):
+def load_db_config(env: Optional[str] = None) -> dict:
     app_config = load_app_config(env)
     if 'db' not in app_config:
         raise RuntimeError("db config is missing")
