@@ -24,13 +24,19 @@ pip install setuptools wheel pipenv
 python setup.py install
 ```
 
-This will install three binaries into your `$PATH`
+or in a single step:
+
+```bash
+./install.sh
+```
+
+This will install three executables into your `$PATH`
 
 1. `observer_source`
 2. `observer_sink`
 3. `observer_fixtures`
 
-More details on how to use in in section [Usage]() below.
+More details on how to use those in the section below.
 
 ## Usage
 
