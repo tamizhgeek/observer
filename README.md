@@ -13,6 +13,8 @@ Observer is a tool to monitor websites. You can configure uptime, status and reg
 
 ### Setup
 
+:information_source: If you are a developer, please proceed to the Development Setup section.
+
 #### Build and Install
 
 The project follows the standard setup.py based installation.
